@@ -1,37 +1,78 @@
+"""
+Bot de Hidratación - Main
+Envía recordatorios de hidratación via Telegram
+"""
 import asyncio
-from telegram import Bot
+import logging
 from datetime import datetime
 
-# Token y Chat ID actualizados
-TOKEN = "7951251109:AAF2uaFPO4N0MsWhmesFhpnIgyjwXMrcZDM"
-CHAT_ID = "6067040288"
+from telegram import Bot
 
-# Nuevos horarios de hidratación (formato 24h)
-HORARIOS = [
-    "05:30", "07:00", "08:30", "10:00", "11:30",
-    "13:00", "14:30", "16:00", "17:30", "19:00",
-    "20:30", "22:00", "23:30", "00:15"
-]
+from config import TOKEN, CHAT_ID, HORARIOS, MENSAJE, MENSAJE_INICIO, INTERVALO_CHECK
 
-# Mensaje de hidratación
-MENSAJE = "💧 ¡Hora de tomar agua, Brayan! Bebe 250 ml y mantente saludable. 🚰💪"
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-async def enviar_mensaje(bot):
-    ya_enviado = set()
-    while True:
+
+class HidratacionBot:
+    """Bot de recordatorios de hidratación"""
+    
+    def __init__(self, token: str, chat_id: str):
+        self.token = token
+        self.chat_id = chat_id
+        self.bot = None
+        self.ya_enviado = set()
+    
+    async def iniciar(self):
+        """Inicializa el bot y envía mensaje de bienvenida"""
+        self.bot = Bot(token=self.token)
+        await self.bot.send_message(
+            chat_id=self.chat_id,
+            text=MENSAJE_INICIO
+        )
+        logger.info(f"Bot iniciado. Enviando recordatorios a chat {self.chat_id}")
+    
+    async def enviar_recordatorio(self):
+        """Envía mensaje de hidratación si es la hora correcta"""
         ahora = datetime.now().strftime("%H:%M")
-        if ahora in HORARIOS and ahora not in ya_enviado:
-            await bot.send_message(chat_id=CHAT_ID, text=MENSAJE)
-            ya_enviado.add(ahora)
-            await asyncio.sleep(60)
+        
+        if ahora in HORARIOS and ahora not in self.ya_enviado:
+            await self.bot.send_message(
+                chat_id=self.chat_id,
+                text=MENSAJE
+            )
+            self.ya_enviado.add(ahora)
+            logger.info(f"Recordatorio enviado a las {ahora}")
+            await asyncio.sleep(60)  # Evitar doble envío
+        
         elif ahora not in HORARIOS:
-            ya_enviado.clear()
-        await asyncio.sleep(20)
+            # Reset a medianoche o cuando sale del rango
+            if ahora < HORARIOS[0]:
+                self.ya_enviado.clear()
+    
+    async def ejecutar(self):
+        """Bucle principal del bot"""
+        await self.iniciar()
+        
+        while True:
+            try:
+                await self.enviar_recordatorio()
+                await asyncio.sleep(INTERVALO_CHECK)
+            except Exception as e:
+                logger.error(f"Error en el bucle: {e}")
+                await asyncio.sleep(INTERVALO_CHECK)
+
 
 async def main():
-    bot = Bot(token=TOKEN)
-    await bot.send_message(chat_id=CHAT_ID, text="🟢 Bot de hidratación iniciado. Recibirás alertas durante el día.")
-    await enviar_mensaje(bot)
+    """Punto de entrada"""
+    logger.info("Iniciando bot de hidratación...")
+    bot = HidratacionBot(TOKEN, CHAT_ID)
+    await bot.ejecutar()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
