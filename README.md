@@ -1,15 +1,17 @@
 # 🤖 Bot de Hidratación
 
-Bot de Telegram que envía recordatorios de hidratación a lo largo del día. **Versión 2.0 mejorada** con soporte multi-chat, mejor manejo de errores y logging.
+Bot de Telegram que envía recordatorios de hidratación a lo largo del día. **Versión 2.1** con comandos interactivos, estadísticas y mejor manejo de errores.
 
 ## 📋 Descripción
 
-Este bot envía mensajes automatizados a intervalos específicos durante el día para recordar hydrate. Fue diseñado para ayudar a mantener una rutina de hidratación saludable.
+Este bot envía mensajes automatizados a intervalos específicos durante el día para recordar hidratarse. Fue diseñado para ayudar a mantener una rutina de hidratación saludable.
 
 ## 🛠️ Características
 
 - ✅ Recordatorios automáticos configurables (default: cada 1.5 horas)
 - ✅ Soporte para múltiples chats (separados por coma)
+- ✅ **Comandos interactivos** (/start, /stop, /status, /stats, /horarios, /ayuda)
+- ✅ **Estadísticas de envíos** en tiempo real
 - ✅ Mensajes personalizados con Markdown
 - ✅ Modo 24/7 con auto-reconexión
 - ✅ Logging completo a archivo y consola
@@ -61,6 +63,20 @@ MENSAJE_HIDRATACION="💧 ¡Hora de beber agua!"
 INTERVALO_CHECK=60
 LOG_LEVEL=INFO
 ```
+
+## ⚙️ Comandos Interactivos
+
+El bot responde a los siguientes comandos de Telegram:
+
+| Comando | Descripción |
+|---------|-------------|
+| `/start` | Iniciar el bot y mostrar ayuda |
+| `/stop` | Pausar recordatorios |
+| `/status` | Ver estado actual del bot |
+| `/stats` | Ver estadísticas de envíos |
+| `/horarios` | Mostrar horarios de recordatorio |
+| `/ayuda` | Mostrar ayuda |
+| `/help` | Mostrar ayuda (alias) |
 
 ## ⚙️ Configuración
 
@@ -161,7 +177,7 @@ git push heroku main
 
 ```
 bot-hidratacion/
-├── main.py              # Código principal del bot (v2.0)
+├── main.py              # Código principal del bot (v2.1)
 ├── config.py           # Configuración centralizada
 ├── requirements.txt    # Dependencias Python
 ├── Procfile            # Para deploy en Railway/Render
@@ -203,6 +219,7 @@ docker restart bot-hidratacion
 - El Chat ID debe ser un número (no @username)
 - Usa `TELEGRAM_CHAT_IDS` para múltiples chats (separados por coma)
 - El log se guarda en `bot-hidratacion.log` (en Docker, configura volumen)
+- Los comandos /stop y /start son locales al chat, no detienen el servicio
 
 ## 🧪 Testing
 
@@ -221,6 +238,12 @@ curl "https://api.telegram.org/bot<TOKEN>/getUpdates"
 ```
 
 ## 📝 Changelog
+
+### v2.1.0 (2026-03-22)
+- ✅ Comandos interactivos (/start, /stop, /status, /stats, /horarios, /ayuda)
+- ✅ Sistema de estadísticas integrado
+- ✅ Mejor manejo de errores con contadores
+- ✅ Integración con python-telegram-bot handlers
 
 ### v2.0.0 (2026-03-22)
 - ✅ Soporte para múltiples chats (`TELEGRAM_CHAT_IDS`)
@@ -244,4 +267,4 @@ MIT License - Feel free to use and modify!
 ## 🤖 Actualizado por
 
 OpenClaw AI Assistant - 2026-03-22
-*Mejoras v2.0: Multi-chat support, mejor logging, manejo de errores*
+*Mejoras v2.1: Comandos interactivos, estadísticas, mejor manejo de errores*
