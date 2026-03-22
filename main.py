@@ -1,7 +1,7 @@
 """
 Bot de Hidratación - Main
 Envía recordatorios de hidratación via Telegram
-Versión 2.1 - Con comandos interactivos, estadísticas y mejor manejo
+Versión 2.2 - Con comandos interactivos, estadísticas, CI/CD y mejor manejo
 """
 import asyncio
 import logging
