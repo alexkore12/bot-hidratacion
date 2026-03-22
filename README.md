@@ -154,6 +154,40 @@ services:
       - ./bot-hidratacion.log:/app/bot-hidratacion.log
 ```
 
+### Docker Compose (Producción)
+
+```bash
+# Build y start
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f bot
+
+# Stop
+docker-compose down
+```
+
+### Dockerfile Multi-stage
+
+El proyecto incluye Dockerfile optimizado con múltiples etapas:
+- **builder**: Instala dependencias de Python
+- **production**: Imagen minimalista para producción
+- **development**: Con herramientas de desarrollo
+
+```bash
+# Build para producción
+docker build --target production -t bot-hidratacion:prod .
+
+# Build para desarrollo
+docker build --target development -t bot-hidratacion:dev .
+
+# Run producción
+docker run -d \
+  -e TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN} \
+  -e TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS} \
+  bot-hidratacion:prod
+```
+
 ## ☁️ Deploy en Render/Railway/Heroku
 
 ### Render/Railway
