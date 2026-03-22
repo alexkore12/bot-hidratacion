@@ -161,6 +161,13 @@ Si el bot deja de funcionar, simplemente reinicia el proceso o el contenedor.
 - **v1.0.0** - Versión inicial con recordatorios básicos
 - **v1.1.0** - Horarios extendidos hasta medianoche
 
+## 🔒 Seguridad
+
+- **Token del bot**: Almacenar en variable de entorno, nunca en código
+- **Webhooks**: Usar HTTPS en producción
+- **Logs**: No registrar información sensible
+- **Permisos**: Mínimo privilegio necesario para el bot
+
 ## 📄 Licencia
 
 MIT License - Feel free to use and modify!
