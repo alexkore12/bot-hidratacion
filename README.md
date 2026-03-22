@@ -1,6 +1,11 @@
 # 🤖 Bot de Hidratación
 
-Bot de Telegram que envía recordatorios de hidratación a lo largo del día. **Versión 2.1** con comandos interactivos, estadísticas y mejor manejo de errores.
+[![CI/CD](https://github.com/alexkore12/bot-hidratacion/actions/workflows/ci.yml/badge.svg)](https://github.com/alexkore12/bot-hidratacion/actions)
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://www.docker.com/)
+
+Bot de Telegram que envía recordatorios de hidratación a lo largo del día. **Versión 2.2** con CI/CD automation, comandos interactivos, estadísticas y mejor manejo de errores.
 
 ## 📋 Descripción
 
@@ -261,6 +266,12 @@ pytest tests/ --cov=. --cov-report=html
 | Env Config | ✅ Environment variables |
 
 ## 📝 Changelog
+
+### v2.2.0 (2026-03-22)
+- ✅ GitHub Actions CI/CD Pipeline añadido
+- ✅ Workflow de tests, linting y seguridad
+- ✅ Badges de estado en README
+- ✅ Configuración de Dependabot
 
 ### v2.1.0 (2026-03-22)
 - ✅ Comandos interactivos (/start, /stop, /status, /stats, /horarios, /ayuda)
