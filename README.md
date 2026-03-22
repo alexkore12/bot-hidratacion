@@ -237,6 +237,29 @@ curl "https://api.telegram.org/bot<TOKEN>/getMe"
 curl "https://api.telegram.org/bot<TOKEN>/getUpdates"
 ```
 
+### Ejecutar Tests
+
+```bash
+# Instalar pytest
+pip install pytest
+
+# Ejecutar tests
+pytest tests/ -v
+
+# Con coverage
+pytest tests/ --cov=. --cov-report=html
+```
+
+### Tests Incluidos
+
+| Categoría | Tests |
+|-----------|-------|
+| Config | ✅ Import, horarios format, mensaje, intervalo |
+| Commands | ✅ /start, /stop, /status, /stats |
+| Logic | ✅ is_time_to_send, get_uptime |
+| Error Handling | ✅ Unknown commands |
+| Env Config | ✅ Environment variables |
+
 ## 📝 Changelog
 
 ### v2.1.0 (2026-03-22)
