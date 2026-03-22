@@ -4,17 +4,15 @@ Bot de Telegram que envía recordatorios de hidratación a lo largo del día.
 
 ## 📋 Descripción
 
-Este bot envía mensajes automatizados a intervalos específicos durante el día para recordar hidratarse. Fue diseñado para ayudar a mantener una rutina de hidratación saludable.
+Este bot envía mensajes automatizados a intervalos específicos durante el día para recordar hydrate. Fue diseñado para ayudar a mantener una rutina de hidratación saludable.
 
 ## 🛠️ Características
 
-- ✅ Recordatorios automáticos cada intervalos personalizados
+- ✅ Recordatorios automáticos cada 1.5 horas
 - ✅ Horarios personalizables
-- ✅ Mensajes personalizados con emojis
+- ✅ Mensajes personalizados
 - ✅ Modo 24/7
 - ✅ Notificación de inicio
-- ✅ Logging configurable
-- ✅ Configuración segura via variables de entorno
 
 ## 🚀 Instalación
 
@@ -46,13 +44,7 @@ pip install -r requirements.txt
 
 4. **Configurar variables de entorno:**
 
-Copia el archivo de ejemplo y complétalo:
-```bash
-cp .env.example .env
-# Edita .env con tu token y chat_id
-```
-
-O establece las variables directamente:
+Crea un archivo `.env` o establece las variables:
 ```bash
 export TELEGRAM_BOT_TOKEN="tu_token_aqui"
 export TELEGRAM_CHAT_ID="tu_chat_id_aqui"
@@ -71,11 +63,10 @@ python main.py
 |----------|-------------|-------------------|
 | `TELEGRAM_BOT_TOKEN` | Token del bot de Telegram | (requerido) |
 | `TELEGRAM_CHAT_ID` | ID del chat destino | (requerido) |
-| `LOG_LEVEL` | Nivel de logging | INFO |
 
 ### Personalizar Horarios
 
-Edita la lista `HORARIOS` en `config.py`:
+Edita la lista `HORARIOS` en `main.py`:
 
 ```python
 HORARIOS = [
@@ -87,7 +78,7 @@ HORARIOS = [
 
 ### Personalizar Mensaje
 
-Edita la variable `MENSAJE` en `config.py`:
+Edita la variable `MENSAJE` en `main.py`:
 
 ```python
 MENSAJE = "💧 ¡Hora de tomar agua! Bebe 250 ml y mantente saludable. 🚰💪"
@@ -137,7 +128,6 @@ services:
 ```
 bot-hidratacion/
 ├── main.py              # Código principal del bot
-├── config.py            # Configuración centralizada
 ├── requirements.txt     # Dependencias Python
 ├── Procfile            # Para deploy en Railway/Render
 ├── .env.example        # Ejemplo de configuración
@@ -160,33 +150,17 @@ docker logs -f bot-hidratacion
 
 Si el bot deja de funcionar, simplemente reinicia el proceso o el contenedor.
 
-## ⚠️ Notas de Seguridad
+## ⚠️ Notas
 
-- **NUNCA** hardcodes tokens en el código
-- Usa siempre variables de entorno en producción
-- El archivo `.env` debe estar en `.gitignore`
+- El bot funciona continuamente y debe estar siempre activo
 - Asegúrate de que el token del bot tenga permisos para enviar mensajes
-
-## 🤝 Contribuir
-
-1. Fork el repositorio
-2. Crea una rama (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -m 'Agrega nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Abre un Pull Request
+- El Chat ID debe ser un número (no @username)
 
 ## 📝 Historial de Versiones
 
-- **v1.2.0** - Seguridad mejorada con python-dotenv y .env.example
-- **v1.1.0** - Horarios extendidos hasta medianoche
 - **v1.0.0** - Versión inicial con recordatorios básicos
+- **v1.1.0** - Horarios extendidos hasta medianoche
 
 ## 📄 Licencia
 
-MIT License - Siéntete libre de usar y modificar.
-
----
-
-## 🇬🇧 English Version (README-en.md)
-
-This project also has an English README available in `README-en.md`.
+MIT License - Feel free to use and modify!
