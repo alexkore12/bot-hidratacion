@@ -1,0 +1,26 @@
+# Grype Security Scanner Configuration
+# https://github.com/anchore/grype
+
+name: bot-hidratacion
+version: 1.0.0
+schema-version: v2.0
+
+# Ignore certain vulnerabilities
+ignore:
+  - vulnerability: CVE-2024-0000
+    fixed-state: wontfix
+    reason: "False positive"
+
+# Vulnerability database update schedule
+check-for-app-update: true
+
+# Output options
+output:
+  format: table
+  file: ""
+
+# Severity filtering (show only Critical, High, Medium by default)
+severity:
+  - Critical
+  - High
+  - Medium
