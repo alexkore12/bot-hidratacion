@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Git
 .git
 .gitignore
@@ -11,6 +12,27 @@ npm-debug.log
 # IDE
 .vscode
 .idea
+=======
+# Dependencies
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# IDE
+.vscode/
+.idea/
+>>>>>>> 877eb0b (Add Docker production configs, multi-stage Dockerfile, and Grype security scanner)
 *.swp
 *.swo
 
@@ -18,6 +40,7 @@ npm-debug.log
 .DS_Store
 Thumbs.db
 
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -29,3 +52,21 @@ coverage
 # Build
 dist
 build
+=======
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+>>>>>>> 877eb0b (Add Docker production configs, multi-stage Dockerfile, and Grype security scanner)

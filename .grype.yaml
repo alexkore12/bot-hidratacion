@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Grype Security Scanner Configuration
 # https://github.com/anchore/grype
 
@@ -24,3 +25,41 @@ severity:
   - Critical
   - High
   - Medium
+=======
+# Grype Configuration for bot-hidratacion
+# Vulnerability scanner configuration
+
+# Scan configuration
+scan:
+  # Files to skip
+  exclude:
+    - tests/
+    - .git/
+    - docs/
+    - tmp/
+
+  # Packages to ignore
+  ignore:
+    # Example: ignore specific CVE
+    # - id: CVE-2021-99999
+
+# Output configuration
+output:
+  # Format options: json, table, cyclonedx, sarif
+  format: json
+  file: grype-results.json
+
+# Update database
+db:
+  # Database cache location
+  cache-dir: ~/.cache/grype
+
+  # Auto-update database
+  auto-update: true
+
+# Severity thresholds
+severity:
+  # Ignore vulnerabilities below threshold
+  # Options: critical, high, medium, low, negligible
+  unfixed: medium
+>>>>>>> 877eb0b (Add Docker production configs, multi-stage Dockerfile, and Grype security scanner)

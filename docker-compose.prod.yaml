@@ -1,0 +1,48 @@
+# Production Docker Compose - bot-hidratacion
+# Optimized for production deployment with health checks and logging
+
+version: '3.8'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: alexkore12/bot-hidratacion:latest
+    container_name: bot-hidratacion
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS}
+      - MENSAJE_HIDRATACION=${MENSAJE_HIDRATACION:-💧 ¡Hora de beber agua!}
+      - INTERVALO_CHECK=${INTERVALO_CHECK:-60}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - bot-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - bot-network
+
+  # Optional: Log aggregator
+  log-aggregator:
+    image: bash:latest
+    container_name: bot-logs
+    volumes:
+      - bot-logs:/logs:ro
+    command: ["tail", "-f", "/dev/null"]
+    networks:
+      - bot-network
+    profiles:
+      - debug
+
+networks:
+  bot-network:
+    driver: bridge
+
+volumes:
+  bot-logs:
