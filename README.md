@@ -1,29 +1,34 @@
 # 🤖 Bot de Hidratación
 
-Bot de Telegram que envía recordatorios de hidratación a lo largo del día. **Versión 2.0 mejorada** con soporte multi-chat, mejor manejo de errores y logging.
+> Tu asistente personal de hidratación - nunca más olvides beber agua 💧
+
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Telegram Bot](https://img.shields.io/badge/Telegram%20Bot-API-blue.svg)](https://core.telegram.org/bots/api)
 
 ## 📋 Descripción
 
-Este bot envía mensajes automatizados a intervalos específicos durante el día para recordar hydrate. Fue diseñado para ayudar a mantener una rutina de hidratación saludable.
+Bot de Telegram que envía recordatorios de hidratación a lo largo del día. Diseñado para ayudar a mantener una rutina de hidratación saludable con mensajes personalizados y statistics de seguimiento.
 
-## 🛠️ Características
+## ✨ Características
 
-- ✅ Recordatorios automáticos configurables (default: cada 1.5 horas)
-- ✅ Soporte para múltiples chats (separados por coma)
-- ✅ Mensajes personalizados con Markdown
-- ✅ Modo 24/7 con auto-reconexión
-- ✅ Logging completo a archivo y consola
-- ✅ Manejo graceful de señales (SIGINT/SIGTERM)
-- ✅ Notificación de inicio con horarios activos
+- ✅ **Recordatorios Configurables** - Intervalo personalizable (default: cada 1.5 horas)
+- ✅ **Soporte Multi-Chat** - Envía recordatorios a múltiples chats simultaneamente
+- ✅ **Mensajes Personalizados** - Mensajes motivacionales con soporte Markdown
+- ✅ **Modo 24/7** - Auto-reconexión automática ante desconexiones
+- ✅ **Logging Completo** - Registros detallados en archivo y consola
+- ✅ **Graceful Shutdown** - Manejo correcto de señales SIGINT/SIGTERM
+- ✅ **Notificaciones de Horario** - Indica horarios activos de hidratación
+- ✅ **Estadísticas** - Historial de hidratación (próximamente)
 
 ## 🚀 Instalación
 
 ### Prerrequisitos
 
-- Python 3.9+
-- Token de Bot de Telegram
+- Python 3.9 o superior
+- Token de Bot de Telegram ([obtener aquí](https://t.me/BotFather))
 
-### Pasos
+### Pasos de Instalación
 
 1. **Clonar el repositorio:**
 ```bash
@@ -35,8 +40,7 @@ cd bot-hidratacion
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # Linux/Mac
-# o
-venv\Scripts\activate  # Windows
+# venv\Scripts\activate  # Windows
 ```
 
 3. **Instalar dependencias:**
@@ -45,203 +49,164 @@ pip install -r requirements.txt
 ```
 
 4. **Configurar variables de entorno:**
-
-Crea un archivo `.env`:
 ```bash
-# Obligatorio
-TELEGRAM_BOT_TOKEN="tu_token_aqui"
-TELEGRAM_CHAT_ID="tu_chat_id_aqui"
+cp .env.example .env
+```
 
-# Opcional - múltiples chats
-# TELEGRAM_CHAT_IDS="chat1,chat2,chat3"
-
-# Opcional
-TELEGRAM_CHAT_IDS="123456789,987654321"
-MENSAJE_HIDRATACION="💧 ¡Hora de beber agua!"
-INTERVALO_CHECK=60
+Edita `.env` con tu configuración:
+```env
+TELEGRAM_BOT_TOKEN=tu_token_aqui
+CHAT_IDS=123456789,987654321
+REMINDER_INTERVAL=5400  # segundos (1.5 horas)
+WATER_GOAL=2000  # ml diarios
+TIMEZONE=America/Mexico_City
 LOG_LEVEL=INFO
+```
+
+5. **Ejecutar el bot:**
+```bash
+# Desarrollo
+python main.py
+
+# Producción (con screen/tmux)
+python main.py &
+```
+
+### Docker
+
+```bash
+# Construir imagen
+docker build -t bot-hidratacion .
+
+# Ejecutar
+docker run -d --env-file .env bot-hidratacion
+```
+
+### Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+## 📖 Uso
+
+### Comandos del Bot
+
+| Comando | Descripción |
+|---------|-------------|
+| `/start` | Inicia el bot y muestra mensaje de bienvenida |
+| `/help` | Muestra información de ayuda |
+| `/status` | Muestra el estado actual del bot |
+| `/setinterval <minutos>` | Cambia el intervalo de recordatorios |
+| `/stop` | Detiene los recordatorios |
+| `/stats` | Muestra estadísticas de hidratación |
+
+### Ejemplo de Mensaje
+
+```
+💧 ¡Hora de hidratarte!
+Meta: 2000ml | Actual: 1200ml
+Próximo recordatorio: 14:30
 ```
 
 ## ⚙️ Configuración
 
 ### Variables de Entorno
 
-| Variable | Descripción | Valor por defecto |
-|----------|-------------|-------------------|
-| `TELEGRAM_BOT_TOKEN` | Token del bot de Telegram | (requerido) |
-| `TELEGRAM_CHAT_ID` | ID del chat destino (solo uno) | (requerido) |
-| `TELEGRAM_CHAT_IDS` | IDs separados por coma (múltiples) | (opcional) |
-| `MENSAJE_HIDRATACION` | Mensaje de recordatorio | Mensaje default |
-| `INTERVALO_CHECK` | Segundos entre verificaciones | 60 |
-| `LOG_LEVEL` | Nivel de logging | INFO |
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `TELEGRAM_BOT_TOKEN` | Token de tu bot de Telegram | **Requerido** |
+| `CHAT_IDS` | IDs de chat separados por coma | **Requerido** |
+| `REMINDER_INTERVAL` | Intervalo en segundos | `5400` (1.5h) |
+| `WATER_GOAL` | Meta diaria de agua en ml | `2000` |
+| `TIMEZONE` | Zona horaria | `America/Mexico_City` |
+| `LOG_LEVEL` | Nivel de logging | `INFO` |
 
-### Personalizar Horarios
+### Mensajes Personalizados
 
-Edita la lista `HORARIOS` en `config.py`:
+Edita `config.py` para personalizar los mensajes:
 
 ```python
-HORARIOS = [
-    "06:00", "07:30", "09:00", "10:30",
-    "12:00", "13:30", "15:00", "16:30",
-    "18:00", "19:30", "21:00", "22:30"
+REMINDER_MESSAGES = [
+    "💧 ¡Hora de hidratarte! Un vaso de agua te espera.",
+    "🌊 Recordatorio: Tu cuerpo necesita agua. ¡Bebe!",
+    "💙 Mantente hidratado. Toma un descanso y bebe agua.",
 ]
 ```
 
-### Personalizar Mensaje
-
-Usa la variable `MENSAJE_HIDRATACION` en `.env` o edita `config.py`:
-
-```python
-MENSAJE = "💧 ¡Hora de tomar agua! Bebe 250 ml y mantente saludable. 🚰💪"
-```
-
-El mensaje soporta Markdown:
-- `*bold*`
-- `_italic_`
-- `•` bullet points
-
-## 🐳 Docker
-
-### Build
-
-```bash
-docker build -t bot-hidratacion .
-```
-
-### Ejecutar
-
-```bash
-docker run -d \
-  --name bot-hidratacion \
-  -e TELEGRAM_BOT_TOKEN="tu_token" \
-  -e TELEGRAM_CHAT_ID="tu_chat_id" \
-  bot-hidratacion
-```
-
-### Docker Compose
-
-```yaml
-version: '3.8'
-services:
-  bot:
-    build: .
-    restart: unless-stopped
-    environment:
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS}
-    volumes:
-      - ./bot-hidratacion.log:/app/bot-hidratacion.log
-```
-
-## ☁️ Deploy en Render/Railway/Heroku
-
-### Render/Railway
-
-1. Conecta tu repositorio
-2. Configura las variables de entorno:
-   - `TELEGRAM_BOT_TOKEN`
-   - `TELEGRAM_CHAT_IDS`
-3. Comando de inicio: `python main.py`
-
-### Heroku
-
-```bash
-# Crear app
-heroku create bot-hidratacion
-
-# Configurar variables
-heroku config:set TELEGRAM_BOT_TOKEN=tu_token
-heroku config:set TELEGRAM_CHAT_IDS=tu_chat_id
-
-# Desplegar
-git push heroku main
-```
-
-## 📁 Estructura del Proyecto
+## 🏗️ Estructura del Proyecto
 
 ```
 bot-hidratacion/
-├── main.py              # Código principal del bot (v2.0)
-├── config.py           # Configuración centralizada
-├── requirements.txt    # Dependencias Python
-├── Procfile            # Para deploy en Railway/Render
-├── .env.example        # Ejemplo de configuración
-├── .gitignore
-└── README.md           # Este archivo
+├── main.py           # Punto de entrada principal
+├── config.py         # Configuración del bot
+├── requirements.txt  # Dependencias Python
+├── .env.example     # Template de variables de entorno
+├── deploy.sh        # Script de deployment
+├── monitor.sh       # Script de monitoreo
+├── SECURITY.md      # Política de seguridad
+├── CODE_OF_CONDUCT.md
+├── LICENSE
+└── README.md
 ```
 
-## 🔧 Mantenimiento
+## 🔒 Seguridad
 
-### Verificar logs
+- ✅ Token del bot en variable de entorno (nunca en código)
+- ✅ Validación de chat IDs autorizados
+- ✅ Rate limiting en mensajes
+- ✅ Sin datos personales almacenados
+- ✅ Logs sin información sensible
+
+Ver [SECURITY.md](SECURITY.md) para más detalles.
+
+## 📊 Monitoreo
 
 ```bash
-# Local
-python main.py
+# Ver logs en tiempo real
+tail -f hydration_bot.log
 
-# Docker
-docker logs -f bot-hidratacion
+# Ver estado del proceso
+ps aux | grep bot-hidratacion
 
-# Ver archivo de log
-tail -f bot-hidratacion.log
+# Reiniciar servicio
+./deploy.sh
 ```
 
-### Reiniciar el bot
+## 🐳 Docker
 
 ```bash
-# Si el bot deja de funcionar
-pkill -f main.py
-python main.py
+# Construir
+docker build -t bot-hidratacion:latest .
 
-# Docker
-docker restart bot-hidratacion
+# Ejecutar en background
+docker run -d --name hydration-bot \
+  --env-file .env \
+  bot-hidratacion:latest
+
+# Ver logs
+docker logs -f hydration-bot
+
+# Detener
+docker stop hydration-bot && docker rm hydration-bot
 ```
 
-## ⚠️ Notas Importantes
+## 🤝 Contribuir
 
-- El bot funciona continuamente y debe estar siempre activo
-- Asegúrate de que el token del bot tenga permisos para enviar mensajes
-- El Chat ID debe ser un número (no @username)
-- Usa `TELEGRAM_CHAT_IDS` para múltiples chats (separados por coma)
-- El log se guarda en `bot-hidratacion.log` (en Docker, configura volumen)
+1. Fork el repositorio
+2. Crear branch: `git checkout -b feature/nueva-caracteristica`
+3. Commit: `git commit -am 'Agregar nueva característica'`
+4. Push: `git push origin feature/nueva-caracteristica`
+5. Crear Pull Request
 
-## 🧪 Testing
+Ver [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.
 
-### Verificar token
+## 📝 Licencia
 
-```bash
-# Usando curl
-curl "https://api.telegram.org/bot<TOKEN>/getMe"
-```
+MIT License - ver [LICENSE](LICENSE) para detalles.
 
-### Verificar chat ID
+## 🔗 Enlaces Útiles
 
-```bash
-# Enviar mensaje al bot y luego ejecutar
-curl "https://api.telegram.org/bot<TOKEN>/getUpdates"
-```
-
-## 📝 Changelog
-
-### v2.0.0 (2026-03-22)
-- ✅ Soporte para múltiples chats (`TELEGRAM_CHAT_IDS`)
-- ✅ Mejor manejo de errores y reconexión automática
-- ✅ Logging a archivo y consola
-- ✅ Manejo graceful de señales (SIGINT/SIGTERM)
-- ✅ Validación de configuración al inicio
-- ✅ Mensajes con formato Markdown mejorado
-
-### v1.1.0 (2026-03-21)
-- ✅ Horarios extendidos hasta medianoche
-- ✅ Configuración vía variables de entorno
-
-### v1.0.0 (2026-03-20)
-- ✅ Versión inicial con recordatorios básicos
-
-## 📄 Licencia
-
-MIT License - Feel free to use and modify!
-
-## 🤖 Actualizado por
-
-OpenClaw AI Assistant - 2026-03-22
-*Mejoras v2.0: Multi-chat support, mejor logging, manejo de errores*
+- [Documentación API de Telegram Bots](https://core.telegram.org/bots/api)
+- [python-telegram-bot Wiki](https://github.com/python-telegram-bot/python-telegram-bot/wiki)
+- [Best Practices for Telegram Bots](https://core.telegram.org/bots/bots-best-practices)
