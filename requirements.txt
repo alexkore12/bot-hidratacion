@@ -1,2 +1,14 @@
-python-telegram-bot>=20.0
+# Bot de Hidratación - Dependencias Python
+# ==============================
+
+# Telegram Bot Framework (v20+ con handlers y application)
+python-telegram-bot[ext]>=20.0
+
+# Gestión de variables de entorno
 python-dotenv>=1.0.0
+
+# Opcional: base de datos SQLite async (para escalar)
+# aiosqlite>=0.19.0
+
+# Opcional: logging estructurado
+# structlog>=23.0.0

@@ -1,25 +1,25 @@
-# 🤖 Bot de Hidratación
+# 💧 Bot de Hidratación
 
-> Tu asistente personal de hidratación - nunca más olvides beber agua 💧
+> Tu asistente personal de hidratación — nunca más olvides beber agua.
+> Registro de consumo, estadísticas semanales y recordatorios automáticos.
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![python-telegram-bot](https://img.shields.io/badge/python--telegram--bot-v20-green.svg)](https://github.com/python-telegram-bot/python-telegram-bot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Telegram Bot](https://img.shields.io/badge/Telegram%20Bot-API-blue.svg)](https://core.telegram.org/bots/api)
+[![SQLite](https://img.shields.io/badge/Database-SQLite-orange.svg)](https://sqlite.org)
+
+## ✨ Lo Nuevo en v3.0
+
+- 🗄️ **Persistencia SQLite** — Tu historial de hidratación se guarda para siempre
+- 📊 **Estadísticas semanales** — Gráficos de progreso y promedios diarios
+- 📝 **Registro manual** — `/log 250`, `/log 500 cafe` con notas
+- 🎯 **Metas personalizables** — Cada usuario tiene su propia meta diaria
+- 📜 **Historial completo** — Consulta hasta 30 días de consumo
+- ⚡ **Comandos interactivos** — Experiencia tipo aplicación native
 
 ## 📋 Descripción
 
-Bot de Telegram que envía recordatorios de hidratación a lo largo del día. Diseñado para ayudar a mantener una rutina de hidratación saludable con mensajes personalizados y statistics de seguimiento.
-
-## ✨ Características
-
-- ✅ **Recordatorios Configurables** - Intervalo personalizable (default: cada 1.5 horas)
-- ✅ **Soporte Multi-Chat** - Envía recordatorios a múltiples chats simultaneamente
-- ✅ **Mensajes Personalizados** - Mensajes motivacionales con soporte Markdown
-- ✅ **Modo 24/7** - Auto-reconexión automática ante desconexiones
-- ✅ **Logging Completo** - Registros detallados en archivo y consola
-- ✅ **Graceful Shutdown** - Manejo correcto de señales SIGINT/SIGTERM
-- ✅ **Notificaciones de Horario** - Indica horarios activos de hidratación
-- ✅ **Estadísticas** - Historial de hidratación (próximamente)
+Bot de Telegram que combina **recordatorios automáticos** con **registro manual** de consumo de agua. Diseñado para ayudarte a mantener una rutina de hidratación saludable con seguimiento de progreso.
 
 ## 🚀 Instalación
 
@@ -27,49 +27,49 @@ Bot de Telegram que envía recordatorios de hidratación a lo largo del día. Di
 
 - Python 3.9 o superior
 - Token de Bot de Telegram ([obtener aquí](https://t.me/BotFather))
+- Opcional: Docker para despliegue en contenedores
 
-### Pasos de Instalación
+### Instalación Local
 
-1. **Clonar el repositorio:**
 ```bash
+# Clonar el repositorio
 git clone https://github.com/alexkore12/bot-hidratacion.git
 cd bot-hidratacion
-```
 
-2. **Crear entorno virtual:**
-```bash
+# Crear entorno virtual
 python3 -m venv venv
 source venv/bin/activate  # Linux/Mac
 # venv\Scripts\activate  # Windows
-```
 
-3. **Instalar dependencias:**
-```bash
+# Instalar dependencias
 pip install -r requirements.txt
-```
 
-4. **Configurar variables de entorno:**
-```bash
+# Configurar variables de entorno
 cp .env.example .env
 ```
 
 Edita `.env` con tu configuración:
+
 ```env
-TELEGRAM_BOT_TOKEN=tu_token_aqui
-CHAT_IDS=123456789,987654321
-REMINDER_INTERVAL=5400  # segundos (1.5 horas)
-WATER_GOAL=2000  # ml diarios
-TIMEZONE=America/Mexico_City
+TELEGRAM_BOT_TOKEN=tu_token_de_bot_aqui
+TELEGRAM_CHAT_IDS=123456789,987654321
+REMINDER_INTERVAL=60
+DB_PATH=hydration_data.db
 LOG_LEVEL=INFO
 ```
 
-5. **Ejecutar el bot:**
+### Ejecución
+
 ```bash
-# Desarrollo
+# Modo desarrollo
 python main.py
 
-# Producción (con screen/tmux)
-python main.py &
+# En background (Linux/Mac)
+nohup python main.py > bot.log 2>&1 &
+
+# Con tmux
+tmux new -s hydration-bot
+python main.py
 ```
 
 ### Docker
@@ -79,34 +79,62 @@ python main.py &
 docker build -t bot-hidratacion .
 
 # Ejecutar
-docker run -d --env-file .env bot-hidratacion
+docker run -d \
+  --name hydration-bot \
+  --env-file .env \
+  bot-hidratacion
 ```
 
 ### Docker Compose
 
+```yaml
+services:
+  bot:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - ./hydration_data.db:/app/hydration_data.db
+```
+
+## 📖 Comandos del Bot
+
+| Comando | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `/start` | Iniciar bot y mostrar bienvenida | `/start` |
+| `/help` | Guía completa de comandos | `/help` |
+| `/log` | Registrar 250ml de agua | `/log` |
+| `/log 500` | Registrar cantidad personalizada | `/log 500` |
+| `/log 250 cafe` | Registrar con nota | `/log 250 cafe` |
+| `/stats` | Estadísticas de la semana | `/stats` |
+| `/status` | Progreso actual del día | `/status` |
+| `/setgoal 2500` | Cambiar meta diaria (ml) | `/setgoal 2500` |
+| `/history` | Últimos registros | `/history` |
+| `/history 14` | Historial de 14 días | `/history 14` |
+| `/stop` | Detener recordatorios | `/stop` |
+
+## 🗄️ Base de Datos
+
+El bot usa **SQLite** para persistir todos los datos localmente:
+
+```
+hydration_data.db
+```
+
+### Esquema
+
+- `hydration_logs` — Registro de cada consumo (chat_id, cantidad, timestamp, nota)
+- `user_settings` — Configuración por usuario (meta diaria, intervalo)
+- `daily_goals` — Seguimiento de metas diarias
+
+### Backup
+
 ```bash
-docker-compose up -d
-```
+# Copia de seguridad
+cp hydration_data.db hydration_data_backup_$(date +%Y%m%d).db
 
-## 📖 Uso
-
-### Comandos del Bot
-
-| Comando | Descripción |
-|---------|-------------|
-| `/start` | Inicia el bot y muestra mensaje de bienvenida |
-| `/help` | Muestra información de ayuda |
-| `/status` | Muestra el estado actual del bot |
-| `/setinterval <minutos>` | Cambia el intervalo de recordatorios |
-| `/stop` | Detiene los recordatorios |
-| `/stats` | Muestra estadísticas de hidratación |
-
-### Ejemplo de Mensaje
-
-```
-💧 ¡Hora de hidratarte!
-Meta: 2000ml | Actual: 1200ml
-Próximo recordatorio: 14:30
+# Restaurar
+cp hydration_data_backup_20260324.db hydration_data.db
 ```
 
 ## ⚙️ Configuración
@@ -115,38 +143,55 @@ Próximo recordatorio: 14:30
 
 | Variable | Descripción | Default |
 |----------|-------------|---------|
-| `TELEGRAM_BOT_TOKEN` | Token de tu bot de Telegram | **Requerido** |
-| `CHAT_IDS` | IDs de chat separados por coma | **Requerido** |
-| `REMINDER_INTERVAL` | Intervalo en segundos | `5400` (1.5h) |
-| `WATER_GOAL` | Meta diaria de agua en ml | `2000` |
-| `TIMEZONE` | Zona horaria | `America/Mexico_City` |
+| `TELEGRAM_BOT_TOKEN` | Token del bot de Telegram | **Requerido** |
+| `TELEGRAM_CHAT_IDS` | IDs de chat separados por coma | **Requerido** |
+| `REMINDER_INTERVAL` | Intervalo de verificación (segundos) | `60` |
+| `DB_PATH` | Ruta del archivo de base de datos | `hydration_data.db` |
 | `LOG_LEVEL` | Nivel de logging | `INFO` |
+
+### Horarios de Recordatorios
+
+Edita `config.py` para personalizar horarios:
+
+```python
+HORARIOS = [
+    "06:00", "07:30", "09:00", "10:30",
+    "12:00", "13:30", "15:00", "16:30",
+    "18:00", "19:30", "21:00", "22:30"
+]
+```
 
 ### Mensajes Personalizados
 
 Edita `config.py` para personalizar los mensajes:
 
 ```python
-REMINDER_MESSAGES = [
-    "💧 ¡Hora de hidratarte! Un vaso de agua te espera.",
-    "🌊 Recordatorio: Tu cuerpo necesita agua. ¡Bebe!",
-    "💙 Mantente hidratado. Toma un descanso y bebe agua.",
-]
+MENSAJE = (
+    "💧 *¡Hora de hidratarse!*\n\n"
+    "Bebe un vaso de agua (250ml)...\n"
+)
 ```
 
 ## 🏗️ Estructura del Proyecto
 
 ```
 bot-hidratacion/
-├── main.py           # Punto de entrada principal
-├── config.py         # Configuración del bot
-├── requirements.txt  # Dependencias Python
-├── .env.example     # Template de variables de entorno
-├── deploy.sh        # Script de deployment
-├── monitor.sh       # Script de monitoreo
-├── SECURITY.md      # Política de seguridad
+├── main.py            # Punto de entrada v3.0
+├── config.py          # Configuración y constantes
+├── database.py        # Capa de persistencia SQLite
+├── bot_commands.py    # Handlers de comandos interactivos
+├── requirements.txt   # Dependencias Python
+├── .env.example      # Template de configuración
+├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
+├── Procfile          # Para deployment en Railway/Render
+├── deploy.sh         # Script de deployment
+├── monitor.sh        # Script de monitoreo
+├── SECURITY.md
 ├── CODE_OF_CONDUCT.md
-├── LICENSE
+├── CONTRIBUTING.md
+├── CHANGELOG.md
 └── README.md
 ```
 
@@ -154,42 +199,42 @@ bot-hidratacion/
 
 - ✅ Token del bot en variable de entorno (nunca en código)
 - ✅ Validación de chat IDs autorizados
-- ✅ Rate limiting en mensajes
-- ✅ Sin datos personales almacenados
-- ✅ Logs sin información sensible
+- ✅ Sanitización de input en comandos
+- ✅ Base de datos local (sin datos en la nube)
+- ✅ Rate limiting implícito en comandos
+- ✅ Sin información sensible en logs
 
-Ver [SECURITY.md](SECURITY.md) para más detalles.
+Ver [SECURITY.md](SECURITY.md) para detalles completos.
 
 ## 📊 Monitoreo
 
 ```bash
 # Ver logs en tiempo real
-tail -f hydration_bot.log
+tail -f bot-hidratacion.log
 
 # Ver estado del proceso
-ps aux | grep bot-hidratacion
+ps aux | grep "python main.py"
 
-# Reiniciar servicio
-./deploy.sh
+# Ver uso de base de datos
+sqlite3 hydration_data.db "SELECT COUNT(*) FROM hydration_logs;"
+
+# Ver tamaño de DB
+ls -lh hydration_data.db
 ```
 
-## 🐳 Docker
+## 🔧 Troubleshooting
 
-```bash
-# Construir
-docker build -t bot-hidratacion:latest .
+### Error: "No se especificó TELEGRAM_BOT_TOKEN"
+ Asegúrate de que `.env` existe y contiene el token válido.
 
-# Ejecutar en background
-docker run -d --name hydration-bot \
-  --env-file .env \
-  bot-hidratacion:latest
+### Error: "Chat ID no válido"
+ Verifica que el `TELEGRAM_CHAT_ID` es numérico (no @username).
 
-# Ver logs
-docker logs -f hydration-bot
+### El bot no responde a comandos
+ Verifica que pusiste el bot en el grupo con permisos de lectura.
 
-# Detener
-docker stop hydration-bot && docker rm hydration-bot
-```
+### Recordatorios no se envían
+ Revisa que los horarios en `HORARIOS` cubren la hora actual.
 
 ## 🤝 Contribuir
 
@@ -201,6 +246,25 @@ docker stop hydration-bot && docker rm hydration-bot
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.
 
+## 📝 Changelog
+
+### v3.0 (2026-03-24)
+- 🗄️ Base de datos SQLite para persistencia
+- 📊 Comando `/stats` con estadísticas semanales
+- 📝 Comando `/log` con notas y cantidades personalizadas
+- 🎯 Comando `/setgoal` para metas personalizables
+- 📜 Comando `/history` con historial de 30 días
+- ⚡ Refactorización completa con python-telegram-bot v20
+- 🐛 Bugfixes y manejo de errores mejorado
+
+### v2.0
+- Soporte multi-chat
+- Logging mejorado
+- Graceful shutdown
+
+### v1.0
+- Versión inicial con recordatorios básicos
+
 ## 📝 Licencia
 
 MIT License - ver [LICENSE](LICENSE) para detalles.
@@ -210,3 +274,4 @@ MIT License - ver [LICENSE](LICENSE) para detalles.
 - [Documentación API de Telegram Bots](https://core.telegram.org/bots/api)
 - [python-telegram-bot Wiki](https://github.com/python-telegram-bot/python-telegram-bot/wiki)
 - [Best Practices for Telegram Bots](https://core.telegram.org/bots/bots-best-practices)
+- [Python SQLite Tutorial](https://docs.python.org/3/library/sqlite3.html)

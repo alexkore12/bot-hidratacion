@@ -81,6 +81,26 @@ ESPERA_POST_ENVIO = int(os.getenv('ESPERA_POST_ENVIO', '5'))
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 
 # ============================================
+# CONFIGURACIÓN DE BASE DE DATOS
+# ============================================
+
+# Ruta de la base de datos SQLite
+DB_PATH = os.getenv('DB_PATH', 'hydration_data.db')
+
+# ============================================
+# CONFIGURACIÓN AVANZADA
+# ============================================
+
+# Puerto para health check endpoint (opcional, para integración)
+HEALTH_CHECK_PORT = int(os.getenv('HEALTH_CHECK_PORT', '8080'))
+
+# Volver a intentar conexión perdida
+RECONNECT_DELAY = int(os.getenv('RECONNECT_DELAY', '30'))
+
+# Máximo de registros por запрос de historial
+MAX_HISTORY_ENTRIES = int(os.getenv('MAX_HISTORY_ENTRIES', '100'))
+
+# ============================================
 # VALIDACIÓN
 # ============================================
 
@@ -100,7 +120,7 @@ def validar_config():
     return True
 
 
-# Validar al importar
+# Validar al importar (solo en modo módulo, no en ejecución directa)
 if __name__ != "__main__":
     try:
         validar_config()
